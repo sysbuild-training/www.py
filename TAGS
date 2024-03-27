@@ -5,3 +5,6 @@ release-202304
 v1.55.0
 release-202310
 	fully overhauled version, published for the 2023 fall term.
+	define the tag as 202310 not actual 202401
+	though the corresponding lecture/exercise is open from 2024/01 to 2024/02
+	due to the hospitalization delay.
