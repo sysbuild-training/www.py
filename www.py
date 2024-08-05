@@ -10,8 +10,8 @@
 #    web: https://www.fml.org/
 # github: https://github.com/fmlorg
 #
-# $FML: www.py,v 1.55 2023/12/27 12:03:58 fukachan Exp $
-# $Revision: 1.55 $
+# $FML: www.py,v 1.60 2024/04/21 10:54:16 fukachan Exp $
+# $Revision: 1.60 $
 #        NAME: www.py
 # DESCRIPTION: a standalone web server based on python3 modules,
 #              which is used as a template for our system build exercises.
@@ -30,11 +30,11 @@ import json
 #
 # Global Configurations
 #
-HTTP_HOST   = "0.0.0.0"
-HTTP_PORT   = 80
-HTDOCS_DIR  = "/home/admin/htdocs"
-INDEX_FILE  = HTDOCS_DIR + "/index.html"
-UPLOAD_FILE = HTDOCS_DIR + "/file.uploaded"
+HTTP_HOST     = "0.0.0.0"
+HTTP_PORT     = 80
+HTDOCS_DIR    = "/home/admin/htdocs"
+INDEX_FILE    = HTDOCS_DIR + "/index.html"
+UPLOADED_FILE = HTDOCS_DIR + "/file.uploaded"
 
 
 
@@ -124,11 +124,12 @@ class httpHandler(http.server.SimpleHTTPRequestHandler):
       return msg
 
 
-   # UPLOAD: uploaded data is written to UPLOAD_FILE(= /home/admin/htdocs/file.uploaded)
+   # UPLOAD: uploaded data is written to UPLOADED_FILE(= /home/admin/htdocs/file.uploaded)
    def upload(self, form):
       count = 0
-      with open(UPLOAD_FILE, mode="wb") as fp:
+      with open(UPLOADED_FILE, mode="wb") as fp:
          count = fp.write(form["file"].file.read())
+      # exercise: AWS Rekognition extension
       return "uploaded: {} bytes written\n".format(count)
 
 
@@ -167,9 +168,10 @@ class wwwpyUtils:
 
     def set_userenv(self):
        user = os.getenv("SUDO_USER")
-       if user:
-          p = pwd.getpwnam(os.getlogin())
-          os.seteuid(p.pw_uid)
+       if not user:
+          user = os.getlogin()
+       p = pwd.getpwnam(user)
+       os.seteuid(p.pw_uid)
 
     def get_userenv(self):
        if os.getenv("DEBUG"):
@@ -182,6 +184,9 @@ class wwwpyUtils:
 # MAIN
 #
 if __name__ == "__main__":
+   # not recommended but may be allowed since this practice is for personal use only.
+   socketserver.TCPServer.allow_reuse_address = True
+
    # run python www server (httpd)
    with socketserver.TCPServer((HTTP_HOST, HTTP_PORT), httpHandler) as httpd:
       print("(debug) serving at port", HTTP_PORT, file=sys.stderr)
