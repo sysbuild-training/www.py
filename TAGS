@@ -8,3 +8,29 @@ release-202310
 	define the tag as 202310 not actual 202401
 	though the corresponding lecture/exercise is open from 2024/01 to 2024/02
 	due to the hospitalization delay.
+
+v1.60.0
+release-202404
+    pull up to v1.60.0 which version has been used as the template in 2024 spring term.
+    - socketserver.TCPServer.allow_reuse_address = True
+    - s/UPLOAD_FILE/UPLOADED_FILE/g
+    - revised handlings around seteuid().
+      1. try to get the envvar SUDO_USER
+      2. try os.getlogin() unless SUDO_USER defined
+      3. get uid via the password database (pwd module)
+      4. apply seteuid(uid)
+    - add a comment "exercise: AWS Rekognition extension"
+    - white space cosmetics for global variables
+
+v1.84.0
+release-202410
+    pull up v1.60 to v1.84 (2024 fall version)
+    - updated copyright, fixed URL for the repository organization
+    - "import socket" added, which gethostname() requires.
+    - new global variable COOKIE_DOMAIN and CONTENT_TYPE added. modified to use them.
+    - define a new method self._get_headers()
+    - reorganilzed cookie handling utility functions _*_cookie_*()
+    - fixed/added more comments for the further exercises
+    - add cart(), openbd() and rekognition() template.
+    - define utilitiy functions: debufinfo(), version(), gethostname().
+    - print debuginfo() always, which is useful for oral exams.
